@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netquality"
+dynamic = ["version"]
+description = "Tray indicator that grades network quality for interactive SSH"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "GPL-3.0-or-later" }
+authors = [{ name = "Teodor Milkov", email = "tm@del.bg" }]
+keywords = ["network", "latency", "packet-loss", "ping", "tray", "indicator", "ssh"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Networking :: Monitoring",
+]
+
+[project.scripts]
+netquality = "netquality.indicator:main"
+
+[project.urls]
+Homepage = "https://github.com/z-image/netquality"
+Issues = "https://github.com/z-image/netquality/issues"
+
+[tool.setuptools.dynamic]
+# Single source of truth: bump netquality/__init__.py, then `dch -v X.Y.Z`.
+version = { attr = "netquality.__version__" }
+
+[tool.setuptools]
+packages = ["netquality"]

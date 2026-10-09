@@ -1,0 +1,52 @@
+Source: netquality
+Section: net
+Priority: optional
+Maintainer: Teodor Milkov <tm@del.bg>
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               pybuild-plugin-pyproject,
+               python3-all,
+               python3-setuptools
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/z-image/netquality
+Vcs-Browser: https://github.com/z-image/netquality
+Vcs-Git: https://github.com/z-image/netquality.git
+
+Package: netquality
+Architecture: all
+Depends: ${python3:Depends},
+         ${misc:Depends},
+         python3-gi,
+         python3-cairo,
+         gir1.2-gtk-3.0,
+         gir1.2-ayatanaappindicator3-0.1,
+         iputils-ping,
+         iproute2
+Suggests: mtr-tiny
+Description: network quality tray indicator for interactive use
+ A system tray indicator that continuously probes one or more targets and
+ grades the connection as good, fair, poor, bad or down, showing coloured
+ signal bars in the panel.
+ .
+ Unlike throughput monitors, it measures what makes an interactive session
+ usable: every probe is classified OK, LATE or LOST against a configurable
+ deadline, so a reply that arrives too late to be acted on is counted as an
+ impairment rather than a success. It also tracks the longest run of
+ consecutive bad probes, which distinguishes a frozen session from scattered
+ packet loss at the same overall rate.
+ .
+ What counts as too late depends on the traffic, so a profile (ssh, realtime or
+ web) sets the deadline, the thresholds and the wording together.
+ .
+ The probe rate adapts, staying slow while the link is healthy and speeding up
+ only when it becomes unstable, which keeps it usable on metered mobile
+ connections.
+ .
+ Several targets can be watched at once. The first sets the icon and the
+ grade; the others are probed only during an alert, so they cost nothing
+ while the link is healthy, and they show whether a fault is one destination
+ or all of them. The first hop towards each target is probed as well, to show
+ whether a fault is on the local link or past it. A tunnel needs no
+ configuration: it is simply a first hop that leaves by a tunnel device, and
+ is treated accordingly.

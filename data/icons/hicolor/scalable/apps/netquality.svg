@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <title>netquality</title>
+  <rect x="6" y="33" width="8" height="10" rx="1.5" fill="#d93333"/>
+  <rect x="18" y="25" width="8" height="18" rx="1.5" fill="#e68c1a"/>
+  <rect x="30" y="17" width="8" height="26" rx="1.5" fill="#d9bf26"/>
+  <rect x="42" y="9" width="8" height="34" rx="1.5" fill="#4cbf4c"/>
+  <rect x="4" y="44" width="40" height="2" rx="1" fill="#888" opacity="0.55"/>
+</svg>

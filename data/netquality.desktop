@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Network Quality
+GenericName=Network Quality Indicator
+Comment=Tray indicator grading latency, loss and jitter for SSH, calls or browsing
+Exec=netquality
+Icon=netquality
+Terminal=false
+Categories=Network;Monitor;GTK;
+Keywords=network;ping;latency;packet loss;ssh;voip;monitor;
+StartupNotify=false

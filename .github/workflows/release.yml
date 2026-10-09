@@ -1,0 +1,121 @@
+name: build-deb
+
+on:
+  push:
+    tags: ["v*"]
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # Pinned, not ubuntu-latest: a pure-Python Architecture:all package built on the
+    # OLDER distro installs on more machines, and the runner's setuptools is 68.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential debhelper dh-python \
+            pybuild-plugin-pyproject python3-all python3-setuptools \
+            devscripts lintian
+
+      - name: Confirm declared build-deps are satisfied
+        run: dpkg-checkbuilddeps
+
+      - name: Build
+        run: dpkg-buildpackage -us -uc -b
+
+      - name: Lintian must stay clean
+        run: lintian -I --pedantic ../netquality_*.deb
+
+      - name: Collect
+        run: |
+          mkdir -p dist && mv ../netquality_*.deb dist/
+          ls -l dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: dist/*.deb
+          if-no-files-found: error
+
+  verify:
+    # The point of this job: the Depends list is hand-written, because dh_python3 sees
+    # neither gi.require_version() nor subprocess. Only a clean machine can prove it.
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: deb
+          path: dist
+
+      - name: Install the .deb and let apt resolve its dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ./dist/netquality_*.deb
+
+      - name: Imports resolve (proves python3-gi, gtk/appindicator typelibs, cairo)
+        run: netquality --version
+
+      - name: Runtime commands present (proves iputils-ping, iproute2)
+        run: |
+          command -v ping
+          command -v ip
+
+      - name: Behavioural test suite against the INSTALLED module
+        run: python3 tests/test_netquality.py /usr/lib/python3/dist-packages/netquality/indicator.py
+
+      - name: Start under a virtual display and stay up
+        run: |
+          sudo apt-get install -y --no-install-recommends xvfb
+          set +e
+          xvfb-run -a timeout 12 netquality --target 1.1.1.1
+          rc=$?
+          set -e
+          # timeout(1) returns 124 when it had to kill a still-running process.
+          # Anything else means the indicator exited on its own, i.e. it crashed.
+          if [ "$rc" -ne 124 ]; then
+            echo "::error::netquality exited early with status $rc"
+            exit 1
+          fi
+          echo "stayed up for 12s under Xvfb"
+
+      - name: Start with a hostname target and a non-default profile
+        run: |
+          # A hostname exercises the resolution first_hop() needs: `ip route get`
+          # rejects names, and the failure is silent -- it merely deletes the
+          # fault-localisation section of the menu.
+          set +e
+          xvfb-run -a timeout 12 netquality --profile realtime --target one.one.one.one
+          rc=$?
+          set -e
+          if [ "$rc" -ne 124 ]; then
+            echo "::error::netquality exited early with status $rc"
+            exit 1
+          fi
+          echo "stayed up for 12s with a hostname target"
+
+  release:
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: deb
+          path: dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.deb
+          generate_release_notes: true

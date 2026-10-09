@@ -1,0 +1,21 @@
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=294 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=3899 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=88.1 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=117 time=108 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=117 time=124 ms (DUP!)
+64 bytes from 8.8.8.8: icmp_seq=5 ttl=117 time=138 ms
+64 bytes from 8.8.8.8: icmp_seq=6 ttl=117 time=2576 ms
+64 bytes from 8.8.8.8: icmp_seq=7 ttl=117 time=1094 ms
+no answer yet for icmp_seq=8
+no answer yet for icmp_seq=9
+64 bytes from 8.8.8.8: icmp_seq=8 ttl=117 time=13276 ms
+64 bytes from 8.8.8.8: icmp_seq=8 ttl=117 time=13277 ms (DUP!)
+no answer yet for icmp_seq=10
+64 bytes from 8.8.8.8: icmp_seq=9 ttl=117 time=11582 ms
+no answer yet for icmp_seq=11
+no answer yet for icmp_seq=12
+64 bytes from 8.8.8.8: icmp_seq=12 ttl=117 time=8664 ms
+64 bytes from 8.8.8.8: icmp_seq=13 ttl=117 time=3356 ms
+no answer yet for icmp_seq=15
+no answer yet for icmp_seq=16
+no answer yet for icmp_seq=17
