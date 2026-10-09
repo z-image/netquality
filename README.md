@@ -26,7 +26,7 @@ Download the `.deb` file from
 [Releases](https://github.com/z-image/netquality/releases). Then install it:
 
 ```
-sudo apt install ./netquality_0.1.2_all.deb
+sudo apt install ./netquality_0.1.3_all.deb
 ```
 
 ## Usage

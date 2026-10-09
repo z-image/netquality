@@ -1,3 +1,11 @@
+netquality (0.1.3) unstable; urgency=medium
+
+  * Fix the Quit menu item. It iterated the address keys of the prober map
+    instead of the probers, raised before it left the main loop, and did
+    nothing visible.
+
+ -- Teodor Milkov <tm@del.bg>  Fri, 09 Oct 2026 13:17:10 +0300
+
 netquality (0.1.2) unstable; urgency=medium
 
   * Initial release.

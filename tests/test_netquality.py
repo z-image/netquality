@@ -320,6 +320,31 @@ finally:
 check(launched == [["mate-terminal", "-e", "mtr work.example.com"]],
       f"mtr runs on the primary target alone (got {launched})")
 
+print("\n=== the Quit menu item ===")
+# self.probers maps address -> Prober, so iterating it yields address strings. A str has no
+# .stop(), the AttributeError ends the handler before Gtk.main_quit(), and GTK only logs
+# the traceback -- to stderr, which autostart discards. Quit then silently does nothing.
+class _Quit:
+    _on_quit = nq.Indicator._on_quit
+
+    def __init__(self, addresses):
+        self.probers = {a: type("P", (), {"stopped": False,
+                                          "stop": lambda p: setattr(p, "stopped", True)})()
+                        for a in addresses}
+
+quitter, quit_calls = _Quit(["work.example.com", "192.168.1.1"]), []
+_main_quit = nq.Gtk.main_quit
+nq.Gtk.main_quit = lambda: quit_calls.append(True)
+try:
+    quitter._on_quit(None)
+except AttributeError as exc:
+    check(False, f"Quit stops every prober and leaves the main loop (raised {exc!r})")
+else:
+    check(all(p.stopped for p in quitter.probers.values()) and quit_calls == [True],
+          "Quit stops every prober and leaves the main loop")
+finally:
+    nq.Gtk.main_quit = _main_quit
+
 print()
 if FAILED:
     print(f"FAILED {len(FAILED)}:")

@@ -895,7 +895,10 @@ class Indicator:
                 return
 
     def _on_quit(self, _item):
-        for prober in self.probers:
+        # .values(): self.probers maps address -> Prober. Iterating the dict itself yields
+        # strings, and the error would end this handler before main_quit() -- silently,
+        # because GTK only logs exceptions raised in a signal handler.
+        for prober in self.probers.values():
             prober.stop()
         Gtk.main_quit()
 
